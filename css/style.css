@@ -14,18 +14,18 @@ body {
 
 #imagesGridContainer {
   display: grid;
-  grid-template-columns: 150px 150px 150px;
+  /* grid-template-columns: 150px 150px 150px; */
   background-color: #2196f3;
-  width: 450px;
-  height: 450px;
+  /* width: 450px; */
+  /* height: 450px; */
   margin: auto;
 }
 .fill {
   background-position: left top;
   position: relative;
   overflow: hidden;
-  height: 150px;
-  width: 150px;
+  /* height: 150px; */
+  /* width: 150px; */
   cursor: pointer;
 }
 #tl {
@@ -66,8 +66,8 @@ body {
 
 .empty {
   display: inline-block;
-  height: 150px;
-  width: 150px;
+  /* height: 150px; */
+  /* width: 150px; */
   /* border: 1px salmon solid; */
   background-color: white;
 }
@@ -89,12 +89,26 @@ main {
 }
 #flexBodyContainer {
   padding-top: 57px;
-  margin: 20px 0;
   display: flex;
   width: 100%;
 }
 #fullImgPopup {
   display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  align-content: center;
+}
+#fullImgPopup.active {
+  display: flex;
+}
+#fullImgPopup > img {
+  display: block;
+  margin: auto;
 }
 header {
   display: flex;
@@ -107,6 +121,7 @@ header {
   z-index: 1;
 }
 .top-line {
+  display: flex;
   max-width: 100%;
 }
 .btn {
@@ -123,21 +138,6 @@ header {
 .btn-primary {
   border: 1px solid #fff;
 }
-
-/* Show Grid Optional */
-.show-grid .empty {
-  height: 148px;
-  width: 148px;
-  border: 1px salmon solid;
-}
-.show-grid .fill {
-  height: 148px;
-  width: 148px;
-}
-.hidden {
-  display: none !important;
-}
-
 .loading-container {
   margin: auto;
 }
@@ -178,5 +178,11 @@ header {
     width: 58px;
     height: 58px;
     opacity: 0;
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  #flexBodyContainer {
+    margin: 20px 0;
   }
 }

@@ -1,13 +1,42 @@
+"use strict";
 var draggingImgId;
 const imgPiecesIDs = ["tl", "tc", "tr", "cl", "cc", "cr", "bl", "bc", "br"];
-const mainContainer = document.getElementById("imagesGridContainer");
+const imagesContainer = document.getElementById("imagesGridContainer");
 const flexBodyContainer = document.getElementById("flexBodyContainer");
 var shuffledPieces = imgPiecesIDs.slice();
-document.getElementById("submitPuzzle").addEventListener("click", checkIfWin);
+document
+  .getElementById("showFullImage")
+  .addEventListener("click", showFullImage);
 document.getElementById("reloadImage").addEventListener("click", getImageURL);
 document.getElementById("showGrid").addEventListener("click", showGrid);
 var imgUrl;
-const url = "https://source.unsplash.com/random/450x450";
+var imageThirdSize;
+// init user moves counter
+var moves = 0;
+// Responsive image size
+var devWidth = document.body.clientWidth; // El. width minus scrollbar width
+var devWidth = document.body.scrollWidth; // El. width minus scrollbar width
+var devwidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
+
+var imageWidth;
+if (devWidth > 800) {
+  var devHeight = document.body.clientHeight;
+  // minus header height and margins of body container
+  imageWidth = devHeight - 57 - 40;
+} else {
+  imageWidth = devWidth;
+}
+// make image devisible by 3
+imageWidth = imageWidth - (imageWidth % 3);
+// size for puzzle pieces
+imageThirdSize = imageWidth / 3;
+console.log(devWidth + " " + imageWidth);
+
+// url with responsive parameters
+const url = `https://source.unsplash.com/random/${imageWidth}x${imageWidth}`;
+
+// set grid responsive to screen size
+imagesContainer.style.cssText = `width:${imageWidth}px;height:${imageWidth}px;grid-template-columns:${imageThirdSize}px ${imageThirdSize}px ${imageThirdSize}px`;
 
 createContainers();
 getImageURL();
@@ -19,11 +48,15 @@ function createContainers() {
   for (let i = 0; i < 9; i++) {
     let pieceContainer = document.createElement("div");
     pieceContainer.className = "empty";
+    //responsive size
+    pieceContainer.style.cssText = `width:${imageThirdSize}px;height:${imageThirdSize}px`;
     var piece = document.createElement("div");
     piece.setAttribute("draggable", true);
+    piece.style.cssText = `width:${imageThirdSize}px;height:${imageThirdSize}px`;
+
     piece.className = "fill";
     pieceContainer.append(piece);
-    mainContainer.append(pieceContainer);
+    imagesContainer.append(pieceContainer);
   }
 }
 function setLoading() {
@@ -121,29 +154,52 @@ function dragDrop() {
   const destImgId = this.children[0].id;
   document.getElementById(draggingImgId).id = destImgId;
   this.children[0].id = draggingImgId;
-  // photoTaken.parentElement.append(tempPhoto);
+  checkIfWin();
 }
 
 function checkIfWin() {
   let i = 0;
+  moves += 1;
   for (const fill of fills) {
     if (fill.id !== imgPiecesIDs[i]) {
-      return alert("Wrong puzzle");
+      return null;
     }
     i++;
   }
-  let ifPlayAgain = confirm("Congratulations! One more time?");
-  if (ifPlayAgain) {
-    getImageURL();
-  }
+  setTimeout(
+    () =>
+      confirm(`Congratulations!\nYou made ${moves} moves.\n One more time?`) &&
+      getImageURL(),
+    1000
+  );
 }
 
 function showGrid(e) {
-  if (mainContainer.className.length > 0) {
+  if (imagesContainer.className.length > 0) {
     e.target.innerHTML = "Show Grid";
-    mainContainer.className = "";
+    imagesContainer.className = "";
+    for (const empty of empties) {
+      empty.style.border = "0px";
+      empty.style.width = `${imageThirdSize}px`;
+      empty.style.height = `${imageThirdSize}px`;
+      empty.children[0].style.width = `${imageThirdSize}px`;
+      empty.children[0].style.height = `${imageThirdSize}px`;
+    }
   } else {
     e.target.innerHTML = "Hide Grid";
+    for (const empty of empties) {
+      empty.style.border = "1px salmon solid";
+      empty.style.width = `${imageThirdSize - 2}px`;
+      empty.style.height = `${imageThirdSize - 2}px`;
+      empty.children[0].style.width = `${imageThirdSize - 2}px`;
+      empty.children[0].style.height = `${imageThirdSize - 2}px`;
+    }
     document.getElementById("imagesGridContainer").className = "show-grid";
   }
+}
+
+function showFullImage() {
+  let imagePopup = document.getElementById("fullImgPopup");
+  imagePopup.className = "active";
+  setTimeout(() => (imagePopup.className = ""), 2000);
 }
