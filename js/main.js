@@ -17,7 +17,12 @@ var moves = 0;
 var devWidth = document.body.clientWidth; // El. width minus scrollbar width
 var devWidth = document.body.scrollWidth; // El. width minus scrollbar width
 var devwidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
+const welcomeMsg =
+  "Arrenge a puzzle by dragging and dropping pieces of it.\nYou can look on the final image by pressing 'Show Original'. \nAlso You can change the image by pressing 'Another Image'.\nHave Fun! :)";
 
+setTimeout(function() {
+  alert(welcomeMsg);
+}, 1);
 var imageWidth;
 if (devWidth > 800) {
   var devHeight = document.body.clientHeight;
@@ -169,8 +174,9 @@ function checkIfWin() {
   }
   setTimeout(
     () =>
-      confirm(`Congratulations!\nYou made ${moves} moves.\n One more time?`) &&
-      getImageURL(),
+      confirm(
+        `Congratulations, it's correct!\nYou made ${moves} moves.\nLet's arrange another one?`
+      ) && getImageURL(),
     1000
   );
 }
@@ -202,5 +208,5 @@ function showGrid(e) {
 function showFullImage() {
   let imagePopup = document.getElementById("fullImgPopup");
   imagePopup.className = "active";
-  setTimeout(() => (imagePopup.className = ""), 2000);
+  setTimeout(() => (imagePopup.className = ""), 1000);
 }
