@@ -67,6 +67,7 @@ function setLoaded() {
 }
 function getImageURL() {
   setLoading();
+  moves = 0;
   console.log("get Image");
   fetch(url, { cache: "no-store" })
     .then(response => {
